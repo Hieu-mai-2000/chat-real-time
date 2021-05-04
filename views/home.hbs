@@ -88,10 +88,7 @@
                                 event.target.classList.add('bg-warning')
                             })
                             btnSend.click(function(){
-                                socket.emit('message',{
-                                    message: $('#inputRegister').val().trim(),
-                                    group : _event.target.innerText
-                                })  
+                                socket.emit('message',$('#inputRegister').val().trim())  
                             })
                         })
 
@@ -102,17 +99,7 @@
                 $('#mainInput').before(`
                     <div style="padding:5px;margin:5px;background-color:rgb(56, 163, 65)">${message}</div>
                 `)
-            })
-
-            
-
-            btnSend.click(function(){
-                                socket.emit('message',{
-                                    message: $('#inputRegister').val().trim(),
-                                    group : event.target.innerText
-                                })  
-                            })
-             
+            })    
             
         })
         

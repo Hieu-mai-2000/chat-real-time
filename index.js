@@ -43,10 +43,10 @@ io.on('connection', socket => {
   })
   
   // nhận tin user muốn gửi
-  socket.on('message', ({message,group})=>{
-    console.log(socket.custom.group)
-    socket.custom.group.find(gr => gr===group) || socket.custom.group.push(group)
-    io.to(socket.custom.group).emit('message',socket.custom.username+':  '+message)
+  socket.on('message', (message)=>{
+    // socket.custom.group.find(gr => gr===group) || socket.custom.group.push(group)
+    io.to(socket.custom.username).to(socket.custom.userChat).emit('message',message)
+    //io.to(socket.custom.group).emit('message',socket.custom.username+':  '+message)
   })
 
   // user hủy kết nối 
