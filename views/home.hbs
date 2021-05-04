@@ -1,0 +1,121 @@
+
+
+<div class="container" id="register" style="text-align: center;">
+    <input type="text" id="inputValue" name="inputValue" placeholder="User Name">
+    <input type="text" id="inputGroup" name="inputGroup" placeholder="Group">
+    <div class="btn btn-primary ml-3" id="btnRegister">Send</div>
+</div>
+<div class="container" id="messages">
+    <div class="row">
+        <div class="col-2" 
+            style="background-color:#7ba9c0;height:500px;margin-right: 26px;border-radius: 10%;opacity:0.7;text-align: center;">
+            <div class="title mt-4 text-justify-center" style="margin-bottom:16px;font-weight:bold">User online</div>
+            <div id="userOnline">
+                
+            </div>
+        </div>
+        <div class="col-2" 
+            style="background-color:#7ba9c0;height:500px;margin-right: 26px;border-radius: 10%;opacity:0.7;text-align: center;">
+            <div class="title mt-4 text-justify-center" style="margin-bottom:16px;font-weight:bold">Group</div>
+            <div id="Group">
+                
+            </div>
+        </div>
+        <div class="col" style="background-color:#7ba9c0;height:500px;border-radius: 10%;opacity:0.7;display: flex;flex-direction: column;
+                    justify-content: flex-end;">
+            <div style="padding:5px;margin:5px;background-color:rgb(62, 91, 153)">text do something</div>
+            
+            <div class="input-group mb-3 align-self-end" id="mainInput">
+                <input type="text" class="form-control" id="inputRegister" placeholder="...">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" id="btnSend" type="button">Send</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded",() =>{
+        
+        $(function() {
+            $('#register').show()
+            $('#messages').hide()
+            let listUsername;
+
+            const btnRegister = $('#btnRegister')
+            const btnSend = $('#btnSend')
+            
+            btnRegister.click(function(){
+                socket.emit('Register',{
+                    username: $('#inputValue').val(),
+                    group: $('#inputGroup').val(),
+                })
+                $('#register').hide()
+                $('#messages').show()  
+                
+            })
+            socket.on('userOnline',function(userOnline){
+                    
+                    if(!userOnline){
+                        $('#register').show()
+                        $('#messages').hide()
+                        alert('find User Online!!! Plese User Other')
+                    }else{
+                        $('#userOnline').text('')
+                        $('#Group').text('')
+
+                        userOnline.forEach( ({username,group}) =>{
+                            $('#userOnline').append(`
+                                <div class="username" style="margin:5px 0">${username}</div>
+                            `)
+                            $('#Group').append(`
+                                <div style="margin:5px 0">${group}</div>
+                            `)
+                        })
+
+                        //test list
+                        listUsername = $('#userOnline .username')
+                        listUsername.click(event => {
+                            const _event = event  
+                            // gửi tính hiệu connect user vừa click vào 
+                            socket.emit('connect_user',event.target.innerText)
+                            socket.on('connect_user',(success)=>{
+                                event.target.classList.add('bg-warning')
+                            })
+                            btnSend.click(function(){
+                                socket.emit('message',{
+                                    message: $('#inputRegister').val().trim(),
+                                    group : _event.target.innerText
+                                })  
+                            })
+                        })
+
+                    }
+            })
+
+            socket.on('message',(message)=>{
+                $('#mainInput').before(`
+                    <div style="padding:5px;margin:5px;background-color:rgb(56, 163, 65)">${message}</div>
+                `)
+            })
+
+            
+
+            btnSend.click(function(){
+                                socket.emit('message',{
+                                    message: $('#inputRegister').val().trim(),
+                                    group : event.target.innerText
+                                })  
+                            })
+             
+            
+        })
+        
+    })
+    
+</script>

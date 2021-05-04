@@ -1,0 +1,64 @@
+
+
+<div class="container" id="register" style="text-align: center;">
+    <input type="text" id="inputValue" name="inputValue" >
+    <button class="btn btn-outline-secondary" id="btnRegister" type="button" style="color: black;">register</button>
+</div>
+<div class="container" id="messages">
+    <div class="row">
+        <div class="col-3" id="userOnline" 
+            style="background-color:#7ba9c0;height:500px;margin-right: 26px;border-radius: 10%;opacity:0.7;text-align: center;">
+            <div class="title mt-4 text-justify-center" style="margin-bottom:16px;font-weight:bold">User online</div>
+        </div>
+        <div class="col" style="background-color:#7ba9c0;height:500px;border-radius: 10%;opacity:0.7;display: flex;flex-direction: column;
+                    justify-content: flex-end;">
+            <div style="padding:5px;margin:5px;background-color:rgb(62, 91, 153)">text to do something</div>
+            <div style="padding:5px;margin:5px;background-color:rgb(56, 163, 65)">text to do something</div>
+            <div class="input-group mb-3 align-self-end">
+                <input type="text" class="form-control" id="inputRegister" placeholder="...">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" id="btnSend" type="button">Send</button>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded",() =>{
+        
+        $(function() {
+            $('#register').show()
+            $('#messages').hide()
+
+            const btnRegister = $('#btnRegister')
+            
+            btnRegister.click(function(){
+                const inputValue = $('#inputValue')
+                socket.emit('inputRegister',inputValue.val())
+                $('#register').hide()
+                $('#messages').show()
+                
+            })
+            
+            
+            
+            socket.on('Rooms',(Rooms)=>{
+                Array.from(Rooms).forEach(room => console.log(room))
+                //const listUser = $('#userOnline')
+                //userOnline.forEach(user => 
+                //listUser.append(`<div class="div menu" style="margin:10px 0">${user}</div> `))
+                
+            })
+                
+            
+            
+        })
+        
+    })
+    
+</script>
